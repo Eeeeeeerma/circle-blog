@@ -1,0 +1,824 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>27考研 · 进度追踪</title>
+<style>
+  :root {
+    --bg: #0f0f14;
+    --card-bg: #1a1a24;
+    --card-border: #2a2a3a;
+    --text: #e0e0e0;
+    --text-secondary: #8888a0;
+    --accent: #6c8cff;
+    --accent-glow: rgba(108, 140, 255, 0.3);
+    --success: #4ecb71;
+    --warning: #f0a040;
+    --danger: #e05050;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+
+  /* ── Header ── */
+  .header { text-align: center; margin-bottom: 32px; }
+  .header .back-link {
+    display: inline-block; color: var(--text-secondary); text-decoration: none;
+    font-size: 14px; margin-bottom: 20px; transition: color 0.2s;
+  }
+  .header .back-link:hover { color: var(--text); }
+  .header h1 {
+    font-size: 2.4rem; font-weight: 700; letter-spacing: 2px;
+    background: linear-gradient(135deg, #6c8cff, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 8px;
+  }
+  .header .subtitle { color: var(--text-secondary); font-size: 15px; }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 14px 20px; text-align: center;
+    min-width: 90px; flex: 1; max-width: 150px;
+  }
+  .stat-card .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+  .stat-card .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ── Countdown ── */
+  .countdown-row {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .countdown-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 20px 20px; text-align: center;
+    min-width: 100px; flex: 1; max-width: 160px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    min-height: 100px;
+  }
+  .countdown-card .number {
+    font-size: 2.8rem; font-weight: 800; font-variant-numeric: tabular-nums;
+    background: linear-gradient(180deg, #fff, #a0a0c0);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+  .countdown-card .label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+  .countdown-card.exam-day { justify-content: center; }
+  .countdown-card.exam-day .number {
+    font-size: 1.2rem; -webkit-text-fill-color: var(--accent);
+    line-height: 1.2; padding: 0.5rem 0;
+  }
+
+  /* ── Progress Bar ── */
+  .progress-section {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+  }
+  .progress-section .progress-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .progress-section .progress-header h3 { font-size: 16px; font-weight: 600; }
+  .progress-section .progress-header .percent {
+    font-size: 14px; color: var(--accent); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-section .progress-subtitle {
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;
+  }
+  .progress-bar-outer {
+    height: 8px; background: #2a2a3a; border-radius: 4px; overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .progress-bar-inner {
+    height: 100%; background: linear-gradient(90deg, #6c8cff, #a78bfa);
+    border-radius: 4px; transition: width 0.6s ease; width: 0%;
+  }
+  .progress-dates {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text-secondary);
+  }
+
+  /* ── Subject Cards ── */
+  .subjects-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin-bottom: 24px;
+  }
+  .subject-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 20px; cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .subject-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .subject-card .subject-icon { font-size: 28px; margin-bottom: 10px; }
+  .subject-card .subject-name { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .subject-card .subject-bar-outer {
+    height: 4px; background: #2a2a3a; border-radius: 2px; overflow: hidden;
+  }
+  .subject-card .subject-bar-inner {
+    height: 100%; border-radius: 2px; transition: width 0.4s ease;
+  }
+  .subject-card .subject-pct {
+    font-size: 12px; color: var(--text-secondary); margin-top: 6px; text-align: right;
+  }
+
+  /* ── Today's Log ── */
+  .log-section {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+  }
+  .log-section h3 {
+    font-size: 16px; font-weight: 600; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .log-section h3 .today-date { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+  .log-form { display: flex; flex-direction: column; gap: 12px; }
+  .log-form .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .log-form input, .log-form textarea, .log-form select {
+    background: #12121a; border: 1px solid var(--card-border);
+    border-radius: 8px; color: var(--text); padding: 10px 14px;
+    font-size: 14px; font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+  }
+  .log-form input:focus, .log-form textarea:focus, .log-form select:focus {
+    border-color: var(--accent);
+  }
+  .log-form input.invalid, .log-form select.invalid { border-color: var(--danger); }
+  .log-form input { flex: 1; min-width: 160px; }
+  .log-form textarea { width: 100%; min-height: 80px; resize: vertical; }
+  .log-form .btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s; align-self: flex-start;
+  }
+  .log-form .btn:hover { background: #5b7aee; box-shadow: 0 0 20px var(--accent-glow); }
+  .log-form .btn-secondary {
+    background: transparent; border: 1px solid var(--card-border); color: var(--text);
+  }
+  .log-form .btn-secondary:hover { background: #222; box-shadow: none; }
+  .log-form .btn-danger {
+    background: transparent; border: 1px solid var(--danger);
+    color: var(--danger); font-size: 12px; padding: 4px 10px;
+  }
+  .log-form .btn-danger:hover { background: rgba(224, 80, 80, 0.1); box-shadow: none; }
+  .log-form .btn-small {
+    background: transparent; border: 1px solid var(--card-border);
+    color: var(--text-secondary); font-size: 12px; padding: 4px 12px;
+    border-radius: 6px; cursor: pointer; transition: border-color 0.2s;
+  }
+  .log-form .btn-small:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ── Log History ── */
+  .log-list { display: flex; flex-direction: column; gap: 12px; }
+  .log-entry {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 20px; transition: border-color 0.2s;
+  }
+  .log-entry:hover { border-color: #3a3a50; }
+  .log-entry .entry-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .log-entry .entry-date { font-weight: 600; font-size: 15px; }
+  .log-entry .entry-date .weekday { color: var(--text-secondary); font-weight: 400; font-size: 13px; }
+  .log-entry .subject-tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    background: rgba(108, 140, 255, 0.15); color: var(--accent); font-weight: 500;
+  }
+  .log-entry .entry-notes { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+  .log-entry .entry-empty { color: #555; font-style: italic; }
+
+  /* ── Empty State ── */
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--text-secondary); }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 15px; }
+
+  /* ── Warning Banner ── */
+  .warning-banner {
+    background: rgba(240, 160, 64, 0.08); border: 1px solid rgba(240, 160, 64, 0.25);
+    border-radius: var(--radius); padding: 12px 16px; margin-bottom: 24px;
+    font-size: 13px; color: var(--warning); display: flex; align-items: flex-start; gap: 8px;
+  }
+  .warning-banner .warn-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* ── Footer ── */
+  .page-footer {
+    text-align: center; color: var(--text-secondary); font-size: 13px;
+    margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--card-border);
+  }
+  .page-footer a { color: var(--accent); text-decoration: none; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container { padding: 16px 12px; }
+    .header h1 { font-size: 1.8rem; }
+    .countdown-card { padding: 14px 16px; min-width: 70px; }
+    .countdown-card .number { font-size: 2rem; }
+    .subjects-grid { grid-template-columns: 1fr 1fr; }
+    .stats-row .stat-card { min-width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <a href="/" class="back-link">← CiRCLE</a>
+    <h1>27 考研</h1>
+    <p class="subtitle">每一份努力都在缩短与梦想的距离</p>
+  </div>
+
+  <!-- Study Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-days">0</div>
+      <div class="stat-label">已学习天数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-streak">0</div>
+      <div class="stat-label">连续打卡 🔥</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-hours">0</div>
+      <div class="stat-label">总学习小时</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-subject-pct">0%</div>
+      <div class="stat-label">科目完成度</div>
+    </div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="countdown-row" id="countdown">
+    <div class="countdown-card">
+      <div class="number" id="cd-days">--</div>
+      <div class="label">天</div>
+    </div>
+    <div class="countdown-card">
+      <div class="number" id="cd-hours">--</div>
+      <div class="label">时</div>
+    </div>
+    <div class="countdown-card">
+      <div class="number" id="cd-mins">--</div>
+      <div class="label">分</div>
+    </div>
+    <div class="countdown-card">
+      <div class="number" id="cd-secs">--</div>
+      <div class="label">秒</div>
+    </div>
+    <div class="countdown-card exam-day">
+      <div class="number" id="exam-date-label"></div>
+      <div class="label">考试日</div>
+    </div>
+  </div>
+
+  <!-- Time Progress -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <h3>⏳ 备考时间进度</h3>
+      <span class="percent" id="overall-pct">0%</span>
+    </div>
+    <div class="progress-subtitle">从今天到考试的时间流逝（不是学习进度，学习进度见下方科目卡片）</div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="overall-bar"></div>
+    </div>
+    <div class="progress-dates">
+      <span id="start-date-label">2026-03-09 开始</span>
+      <span id="end-date-label">2026-12-25 考试</span>
+    </div>
+  </div>
+
+  <!-- Subject Progress -->
+  <h3 style="font-size:16px;font-weight:600;margin-bottom:12px;">📚 科目进度（点击卡片更新）</h3>
+  <div class="subjects-grid" id="subjects-grid"></div>
+
+  <!-- Today's Log -->
+  <div class="log-section">
+    <h3>✍️ 今日记录 <span class="today-date" id="today-label"></span></h3>
+    <div class="log-form" id="log-form">
+      <div class="form-row">
+        <select id="log-subject">
+          <option value="">选择科目...</option>
+        </select>
+        <input type="number" id="log-hours" placeholder="学习时长（小时）" min="0" max="24" step="0.5">
+      </div>
+      <textarea id="log-notes" placeholder="今天学了什么？有什么收获或困惑？"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" onclick="saveLog()">💾 保存记录</button>
+        <button class="btn btn-secondary" onclick="clearTodayForm()">清空</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h3 style="font-size:16px;font-weight:600;">📖 学习日志</h3>
+    <div style="display:flex;gap:6px;">
+      <button class="btn btn-small" onclick="exportData()">📤 导出</button>
+      <button class="btn btn-small" onclick="importData()">📥 导入</button>
+    </div>
+  </div>
+  <div class="log-list" id="log-list">
+    <div class="empty-state">
+      <div class="empty-icon">📝</div>
+      <p>还没有学习记录<br>在「今日记录」中添加你的第一条打卡吧</p>
+    </div>
+  </div>
+
+  <!-- Data Safety Warning -->
+  <div class="warning-banner">
+    <span class="warn-icon">⚠️</span>
+    <span>所有数据保存在浏览器本地存储（localStorage）中。<strong>清除浏览器缓存/数据会导致记录丢失。</strong>建议定期使用「导出」按钮备份数据到文件。</span>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <a href="/">← 返回博客</a> &nbsp;·&nbsp; 加油考研人 💪
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// Config
+// ============================================================
+const EXAM_DATE = new Date(2026, 11, 25, 8, 30, 0); // Dec 25, 2026 — 27考研（26年12月考试）
+const START_DATE = new Date(2026, 2, 9); // March 9, 2026 — 备考开始
+
+const DEFAULT_SUBJECTS = [
+  { id: 'math',     name: '数学（一）',   icon: '📐', color: '#6c8cff', units: 36, unitName: '节',
+    rounds: [{ name:'一轮基础',done:0},{name:'二轮强化',done:0},{name:'三轮冲刺',done:0}] },
+  { id: 'english',  name: '英语（一）',   icon: '📖', color: '#4ecb71', units: 25, unitName: '模块',
+    rounds: [{ name:'一轮基础',done:0},{name:'二轮强化',done:0},{name:'三轮冲刺',done:0}] },
+  { id: 'politics', name: '政治',         icon: '📰', color: '#f0a040', units: 20, unitName: '专题',
+    rounds: [{ name:'一轮基础',done:0},{name:'二轮强化',done:0},{name:'三轮冲刺',done:0}] },
+  { id: 'cs',       name: '408 计算机',   icon: '💻', color: '#e05050', units: 32, unitName: '章',
+    rounds: [{ name:'一轮基础',done:0},{name:'二轮强化',done:0},{name:'三轮冲刺',done:0}] },
+];
+
+// ============================================================
+// Data helpers — 优先从 JSON 文件加载（GitHub Pages），fallback 到 localStorage
+// ============================================================
+let jsonDataLoaded = false;
+
+async function loadFromJSON() {
+  try {
+    const res = await fetch('/data/kaoyan-study-log.json');
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Migrate old format if needed
+    if (data.subjects) {
+      data.subjects.forEach(s => {
+        if (s.chapters !== undefined && s.units === undefined) {
+          s.units = s.chapters; s.unitName = s.chapterName || '章';
+          delete s.chapters; delete s.chapterName;
+        }
+        if (!s.rounds || s.rounds.length === 0) {
+          s.rounds = [{ name:'一轮基础',done:s.done||0 },{ name:'二轮强化',done:0 },{ name:'三轮冲刺',done:0 }];
+          s.done = undefined;
+        }
+      });
+    }
+    return data;
+  } catch { return null; }
+}
+
+function loadSubjects() {
+  // Try localStorage first (instant, works offline)
+  const raw = localStorage.getItem('kaoyan_subjects');
+  if (raw) {
+    const s = JSON.parse(raw);
+    if (s.length) {
+      // Migrate old format
+      let migrated = false;
+      s.forEach(item => {
+        if (item.chapters !== undefined && item.units === undefined) {
+          item.units = item.chapters;
+          item.unitName = item.chapterName || '章';
+          delete item.chapters; delete item.chapterName;
+          migrated = true;
+        }
+        // Add rounds if missing (old single-round format)
+        if (!item.rounds || item.rounds.length === 0) {
+          item.rounds = [
+            { name:'一轮基础', done: item.done || 0 },
+            { name:'二轮强化', done: 0 },
+            { name:'三轮冲刺', done: 0 }
+          ];
+          item.done = undefined;
+          migrated = true;
+        }
+      });
+      if (migrated) saveSubjects(s);
+      return s;
+    }
+  }
+  // Fallback to defaults
+  const defaults = DEFAULT_SUBJECTS.map(s => ({ ...s, done: 0 }));
+  saveSubjects(defaults);
+  return defaults;
+}
+function saveSubjects(s) { localStorage.setItem('kaoyan_subjects', JSON.stringify(s)); }
+
+function loadLogs() {
+  const raw = localStorage.getItem('kaoyan_logs');
+  return raw ? JSON.parse(raw) : {};
+}
+function saveLogs(l) { localStorage.setItem('kaoyan_logs', JSON.stringify(l)); }
+
+// ============================================================
+// Stats
+// ============================================================
+function updateStats() {
+  const logs = loadLogs();
+  const keys = Object.keys(logs).sort();
+  const subjects = loadSubjects();
+
+  // Study days
+  document.getElementById('stat-days').textContent = keys.length;
+
+  // Streak (consecutive days ending today)
+  const today = todayKey();
+  let streak = 0;
+  let check = new Date();
+  while (true) {
+    const k = dateKey(check);
+    if (logs[k] && logs[k].length > 0) { streak++; check.setDate(check.getDate() - 1); }
+    else break;
+  }
+  document.getElementById('stat-streak').textContent = streak;
+
+  // Total hours
+  let totalHours = 0;
+  for (const k of keys) {
+    for (const e of logs[k]) { totalHours += e.hours || 0; }
+  }
+  document.getElementById('stat-hours').textContent = totalHours.toFixed(1);
+
+  // Subject completion % (weighted across subjects)
+  const wpcts = subjects.map(s => subjectWeightedPct(s));
+  const avgPct = wpcts.length > 0 ? Math.round(wpcts.reduce((a,b)=>a+b,0) / wpcts.length) : 0;
+  document.getElementById('stat-subject-pct').textContent = avgPct + '%';
+}
+
+// ============================================================
+// Countdown (date-only day calculation)
+// ============================================================
+function updateCountdown() {
+  const now = new Date();
+  const diff = EXAM_DATE.getTime() - now.getTime();
+
+  if (diff <= 0) {
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '0');
+    return;
+  }
+
+  // Day count: ceil of remaining milliseconds / ms-per-day
+  const days = Math.ceil(diff / 86400000);
+  const totalSec = Math.floor(diff / 1000);
+  const hours = Math.floor((totalSec % 86400) / 3600);
+  const mins  = Math.floor((totalSec % 3600) / 60);
+  const secs  = totalSec % 60;
+
+  document.getElementById('cd-days').textContent  = days;
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('cd-mins').textContent  = String(mins).padStart(2, '0');
+  document.getElementById('cd-secs').textContent  = String(secs).padStart(2, '0');
+}
+
+// ============================================================
+// Time Progress Bar (elapsed / total)
+// ============================================================
+function updateTimeProgress() {
+  const now = new Date();
+  const total = EXAM_DATE.getTime() - START_DATE.getTime();
+  const elapsed = now.getTime() - START_DATE.getTime();
+  const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
+
+  document.getElementById('overall-pct').textContent = pct.toFixed(1) + '%';
+  document.getElementById('overall-bar').style.width = pct.toFixed(1) + '%';
+  document.getElementById('exam-date-label').textContent = '2026/12/25';
+}
+
+// ============================================================
+// Subject Cards
+// ============================================================
+function subjectWeightedPct(s) {
+  if (!s.rounds || s.rounds.length === 0) return 0;
+  // 一轮 50%, 二轮 35%, 三轮 15%
+  const weights = [0.5, 0.35, 0.15];
+  let total = 0;
+  s.rounds.forEach((r, i) => {
+    total += weights[i] * (s.units > 0 ? Math.min(r.done, s.units) / s.units : 0);
+  });
+  return Math.round(total * 100);
+}
+function renderSubjects() {
+  const subjects = loadSubjects();
+  const grid = document.getElementById('subjects-grid');
+  grid.innerHTML = subjects.map(s => {
+    const rds = s.rounds || [];
+    const wpct = subjectWeightedPct(s);
+    return `
+      <div class="subject-card" onclick="editSubject('${s.id}')">
+        <div class="subject-icon">${s.icon}</div>
+        <div class="subject-name">${s.name}</div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+          ${rds.map((r,i) => {
+            const rpct = s.units > 0 ? Math.round(Math.min(r.done,s.units)/s.units*100) : 0;
+            const alpha = [1, 0.7, 0.5][i];
+            return `<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);">
+              <span style="width:42px;flex-shrink:0;opacity:${alpha}">${r.name}</span>
+              <div style="flex:1;height:3px;background:#2a2a3a;border-radius:1px;overflow:hidden;">
+                <div style="height:100%;width:${rpct}%;background:${s.color};opacity:${alpha};border-radius:1px;"></div>
+              </div>
+              <span style="width:26px;text-align:right;opacity:${alpha}">${rpct}%</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="subject-pct" style="font-weight:600;">综合 ${wpct}%</div>
+      </div>
+    `;
+  }).join('');
+
+  const select = document.getElementById('log-subject');
+  select.innerHTML = '<option value="">选择科目（必选）...</option>' +
+    subjects.map(s => `<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+}
+function editSubject(id) {
+  const subjects = loadSubjects();
+  const s = subjects.find(s => s.id === id);
+  if (!s) return;
+  const rds = s.rounds || [];
+  const msg = rds.map((r,i) =>
+    `${r.name}: ${r.done}/${s.units} ${s.unitName}`
+  ).join('\n');
+  const roundIdx = parseInt(prompt(
+    `${s.icon} ${s.name}\n\n${msg}\n\n输入第几轮 (1-${rds.length})，取消则不改:`, '1'));
+  if (isNaN(roundIdx) || roundIdx < 1 || roundIdx > rds.length) return;
+  const newDone = parseInt(prompt(
+    `${rds[roundIdx-1].name}\n当前: ${rds[roundIdx-1].done}/${s.units} ${s.unitName}\n输入已完成:`,
+    rds[roundIdx-1].done));
+  if (isNaN(newDone) || newDone < 0) return;
+  rds[roundIdx-1].done = Math.min(newDone, s.units);
+  saveSubjects(subjects);
+  renderSubjects();
+  updateStats();
+}
+
+// ============================================================
+// Daily Log
+// ============================================================
+function todayKey() {
+  const d = new Date();
+  return dateKey(d);
+}
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function formatDate(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  const date = new Date(y, m-1, d);
+  const weekdays = ['日','一','二','三','四','五','六'];
+  return {
+    full: `${y}年${m}月${d}日`,
+    weekday: `星期${weekdays[date.getDay()]}`,
+  };
+}
+function saveLog() {
+  const subjectEl = document.getElementById('log-subject');
+  const hoursEl = document.getElementById('log-hours');
+  const notesEl = document.getElementById('log-notes');
+
+  const subject = subjectEl.value;
+  const hours = hoursEl.value;
+  const notes = notesEl.value.trim();
+
+  // Reset validation
+  subjectEl.classList.remove('invalid');
+
+  // Validate: subject is required
+  if (!subject) {
+    subjectEl.classList.add('invalid');
+    alert('请先选择一个科目');
+    subjectEl.focus();
+    return;
+  }
+  if (!notes && !hours) {
+    if (!confirm('你没有填写学习时长和备注，确定保存一条空记录吗？')) return;
+  }
+
+  const key = todayKey();
+  const logs = loadLogs();
+  if (!logs[key]) logs[key] = [];
+  logs[key].push({
+    time: new Date().toISOString(),
+    subject,
+    hours: parseFloat(hours) || 0,
+    notes,
+  });
+  saveLogs(logs);
+  clearTodayForm();
+  renderLogs();
+  updateStats();
+}
+function clearTodayForm() {
+  document.getElementById('log-subject').value = '';
+  document.getElementById('log-subject').classList.remove('invalid');
+  document.getElementById('log-hours').value = '';
+  document.getElementById('log-notes').value = '';
+}
+function deleteLogEntry(dateKey, index) {
+  if (!confirm('删除这条记录？')) return;
+  const logs = loadLogs();
+  logs[dateKey].splice(index, 1);
+  if (logs[dateKey].length === 0) delete logs[dateKey];
+  saveLogs(logs);
+  renderLogs();
+  updateStats();
+}
+function renderLogs() {
+  const logs = loadLogs();
+  const keys = Object.keys(logs).sort().reverse();
+  const list = document.getElementById('log-list');
+
+  if (keys.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p>还没有学习记录<br>在「今日记录」中添加你的第一条打卡吧</p>
+      </div>`;
+    return;
+  }
+
+  const subjects = loadSubjects();
+  list.innerHTML = keys.map(key => {
+    const { full, weekday } = formatDate(key);
+    const entries = logs[key];
+    // Sum hours for this day
+    const dayHours = entries.reduce((sum, e) => sum + (e.hours || 0), 0);
+    return `
+      <div class="log-entry">
+        <div class="entry-header">
+          <span class="entry-date">
+            ${full} <span class="weekday">${weekday}</span>
+          </span>
+          <span style="color:var(--text-secondary);font-size:13px;">
+            ${entries.length} 条 · ⏱ ${dayHours.toFixed(1)}h
+          </span>
+        </div>
+        ${entries.map((e, i) => {
+          const subj = subjects.find(s => s.id === e.subject);
+          const subjName = subj ? `${subj.icon} ${subj.name}` : (e.subject || '未指定');
+          return `
+            <div style="margin-bottom:8px;padding-left:12px;border-left:2px solid var(--card-border);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="subject-tag">${subjName}</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                  ${e.hours > 0 ? `<span style="font-size:12px;color:var(--text-secondary);">⏱ ${e.hours}h</span>` : ''}
+                  <button class="btn btn-danger" onclick="deleteLogEntry('${key}',${i})">删除</button>
+                </span>
+              </div>
+              ${e.notes ? `<div class="entry-notes">${escapeHtml(e.notes)}</div>` : '<div class="entry-empty">无备注</div>'}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }).join('');
+}
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ============================================================
+// Export / Import
+// ============================================================
+function exportData() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    subjects: loadSubjects(),
+    logs: loadLogs(),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kaoyan-backup-${todayKey()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!data.subjects || !data.logs) throw new Error('格式错误');
+        if (!confirm(
+          `即将导入数据:\n` +
+          `• ${Object.keys(data.logs).length} 天学习记录\n` +
+          `• ${data.subjects.length} 个科目的进度\n\n` +
+          `⚠️ 这会覆盖当前所有数据，确定继续？`
+        )) return;
+        saveSubjects(data.subjects);
+        saveLogs(data.logs);
+        renderAll();
+        alert('✅ 数据导入成功！');
+      } catch (err) {
+        alert('❌ 文件格式不正确，请选择之前导出的备份文件。');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ============================================================
+// Init
+// ============================================================
+function renderAll() {
+  updateCountdown();
+  updateTimeProgress();
+  updateStats();
+  renderSubjects();
+  renderLogs();
+}
+
+async function init() {
+  document.getElementById('today-label').textContent =
+    formatDate(todayKey()).full + ' ' + formatDate(todayKey()).weekday;
+
+  // Try loading from JSON (deployed data) and merge into localStorage
+  const jsonData = await loadFromJSON();
+  if (jsonData) {
+    jsonDataLoaded = true;
+    // Merge subjects — JSON takes priority for progress
+    if (jsonData.subjects && jsonData.subjects.length) {
+      // Check if JSON has newer data (compare lastUpdated vs our localStorage)
+      const localSubj = loadSubjects();
+      jsonData.subjects.forEach(js => {
+        const local = localSubj.find(s => s.id === js.id);
+        if (local) {
+          // Take the higher progress
+          local.done = Math.max(local.done || 0, js.done || 0);
+          // Sync units/name if changed
+          if (js.units) local.units = js.units;
+          if (js.unitName) local.unitName = js.unitName;
+        }
+      });
+      saveSubjects(localSubj);
+    }
+    // Merge logs — keep entries from both sources
+    if (jsonData.logs) {
+      const localLogs = loadLogs();
+      for (const [key, entries] of Object.entries(jsonData.logs)) {
+        if (!localLogs[key]) {
+          localLogs[key] = entries;
+        } else {
+          // Merge entries, deduplicate by time
+          const existingTimes = new Set(localLogs[key].map(e => e.time));
+          const newEntries = entries.filter(e => !existingTimes.has(e.time));
+          localLogs[key].push(...newEntries);
+        }
+      }
+      saveLogs(localLogs);
+    }
+  }
+
+  renderAll();
+  setInterval(updateCountdown, 1000);
+  setInterval(updateTimeProgress, 60000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
