@@ -63,6 +63,38 @@
   /* All scrolling content sits above the fixed background */
   .page-content { position: relative; z-index: 1; }
 
+  /* ============================================================
+     Preloader — #202124 matches homepage dark-mode preloader
+     ============================================================ */
+  .preloader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #202124;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  .preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .preloader-title {
+    font-family: 'Chillax-Variable', 'Geist Variable', sans-serif;
+    font-size: 3rem; font-weight: 600; color: #fff;
+    letter-spacing: 4px; text-align: center;
+    opacity: 0;
+    animation:
+      plIn  0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards 0.05s,
+      plOut 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards 1.4s;
+    text-shadow: 0 2px 24px rgba(255,255,255,0.3);
+  }
+  @keyframes plIn {
+    0%   { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+    100% { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+  }
+  @keyframes plOut {
+    0%   { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+    100% { opacity: 0; transform: translateY(-12px); filter: blur(4px); }
+  }
+
+  @media (max-width: 640px) {
+    .preloader-title { font-size: 2.2rem; letter-spacing: 2px; }
+  }
 
   /* ============================================================
      Navbar — matches blog's glassmorphism navbar
@@ -394,6 +426,11 @@
 <!-- Fixed background layer — stays put while content scrolls over it -->
 <div class="bg-layer"></div>
 
+<!-- Preloader — entrance animation, matches homepage preloader color -->
+<div class="preloader" id="preloader">
+  <h2 class="preloader-title">27 考研</h2>
+</div>
+
 <!-- Navbar — fixed, must be outside page-content to stay viewport-relative -->
 <nav class="navbar">
   <div class="navbar-inner">
@@ -407,7 +444,6 @@
 </nav>
 
 
-<!-- Page wrapper for entrance animation -->
 <div class="page-content">
 
 <!-- Hero — gradient banner with integrated countdown -->
@@ -560,6 +596,17 @@
 
     setTimeout(function(){ window.location = link.href; }, 500);
   });
+})();
+
+// ============================================================
+// Preloader — entrance animation
+// ============================================================
+(function() {
+  var preloader = document.getElementById('preloader');
+  setTimeout(function() {
+    preloader.classList.add('hidden');
+    setTimeout(function() { preloader.remove(); }, 400);
+  }, 2000);
 })();
 
 // ============================================================
