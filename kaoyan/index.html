@@ -36,7 +36,7 @@
 
   body {
     font-family: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: var(--bg);
+    background: #1e2a38;
     color: var(--text);
     min-height: 100vh;
     line-height: 1.8;
@@ -51,7 +51,7 @@
     position: fixed; inset: 0; z-index: 9999;
     background: #1e2a38;
     display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
   }
   .preloader.hidden {
     opacity: 0; visibility: hidden; pointer-events: none;
@@ -60,20 +60,25 @@
     font-family: 'Chillax-Variable', 'Geist Variable', sans-serif;
     font-size: 3rem; font-weight: 600; color: #fff;
     letter-spacing: 4px; text-align: center;
-    opacity: 0; transform: translateY(16px);
-    animation: preloaderIn 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-    animation-delay: 0.15s;
+    opacity: 0;
+    animation:
+      preloaderIn  0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards 0.1s,
+      preloaderOut 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards 1.2s;
     text-shadow: 0 2px 24px rgba(255,255,255,0.3);
   }
   @keyframes preloaderIn {
     0%   { opacity: 0; transform: translateY(16px); filter: blur(6px); }
     100% { opacity: 1; transform: translateY(0);    filter: blur(0px); }
   }
+  @keyframes preloaderOut {
+    0%   { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+    100% { opacity: 0; transform: translateY(-12px); filter: blur(4px); }
+  }
 
   /* Hero entrance — content fades in after preloader hides */
-  .page-content { opacity: 0; animation: pageReveal 0.7s ease forwards; animation-delay: 0.3s; }
+  .page-content { opacity: 0; animation: pageReveal 0.6s ease forwards; animation-delay: 0.25s; }
   @keyframes pageReveal {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(6px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
@@ -87,28 +92,28 @@
   .navbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     font-family: 'Chillax-Variable', 'Geist Variable', sans-serif;
-    background: linear-gradient(120deg, rgba(74,106,138,0.208) 0%, rgba(107,141,181,0.208) 100%);
+    background: linear-gradient(120deg, rgba(74,106,138,0.25) 0%, rgba(107,141,181,0.25) 100%);
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
   .navbar-inner {
     max-width: 850px; margin: 0 auto; padding: 0 24px;
     height: 52px; display: flex; align-items: center; justify-content: space-between;
   }
   .navbar-brand {
-    font-size: 1.4rem; font-weight: 520; color: var(--text);
+    font-size: 1.4rem; font-weight: 520; color: #fff;
     text-decoration: none; letter-spacing: 0.5px;
-    transition: color 0.2s;
+    transition: color 0.2s; text-shadow: 0 1px 4px rgba(0,0,0,0.15);
   }
-  .navbar-brand:hover { color: var(--primary); }
+  .navbar-brand:hover { color: rgba(255,255,255,0.8); }
   .navbar-links { display: flex; gap: 20px; align-items: center; }
   .navbar-links a {
-    font-size: 0.95rem; font-weight: 500; color: var(--text-secondary);
+    font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.7);
     text-decoration: none; transition: color 0.2s; font-family: 'Geist Variable', sans-serif;
   }
-  .navbar-links a:hover { color: var(--primary); }
-  .navbar-links a.active { color: var(--primary); font-weight: 600; }
+  .navbar-links a:hover { color: #fff; }
+  .navbar-links a.active { color: #fff; font-weight: 600; }
 
   /* ============================================================
      Hero Section — gradient banner matching blog aesthetic
@@ -552,9 +557,8 @@
   // Hide after 2.5s (animation lasts ~1s + 1.5s hold for readability)
   setTimeout(function() {
     preloader.classList.add('hidden');
-    // Remove from DOM after transition
-    setTimeout(function() { preloader.remove(); }, 500);
-  }, 2500);
+    setTimeout(function() { preloader.remove(); }, 400);
+  }, 2000);
 })();
 
 // ============================================================
