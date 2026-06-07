@@ -1,0 +1,14 @@
+{
+  "lastUpdated": "2026-06-07",
+  "subjects": [
+    { "id": "math", "name": "数学（一）", "icon": "📐", "color": "#6c8cff", "units": 36, "unitName": "节",
+      "rounds": [{"name":"一轮基础","done":0},{"name":"二轮强化","done":0},{"name":"三轮冲刺","done":0}] },
+    { "id": "english", "name": "英语（一）", "icon": "📖", "color": "#4ecb71", "units": 25, "unitName": "模块",
+      "rounds": [{"name":"一轮基础","done":0},{"name":"二轮强化","done":0},{"name":"三轮冲刺","done":0}] },
+    { "id": "politics", "name": "政治", "icon": "📰", "color": "#f0a040", "units": 20, "unitName": "专题",
+      "rounds": [{"name":"一轮基础","done":0},{"name":"二轮强化","done":0},{"name":"三轮冲刺","done":0}] },
+    { "id": "cs", "name": "408 计算机", "icon": "💻", "color": "#e05050", "units": 32, "unitName": "章",
+      "rounds": [{"name":"一轮基础","done":0},{"name":"二轮强化","done":0},{"name":"三轮冲刺","done":0}] }
+  ],
+  "logs": {}
+}

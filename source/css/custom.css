@@ -1,0 +1,16 @@
+/* 首页横幅 — 加一层半透暗色遮罩，让白字更清楚 */
+.home-banner-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Banner 标题 — 加文字阴影，在亮部和雪花区域也能看清 */
+.home-banner-container .description {
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(0, 0, 0, 0.4);
+}
