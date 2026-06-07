@@ -554,11 +554,34 @@
 // ============================================================
 (function() {
   var preloader = document.getElementById('preloader');
-  // Hide after 2.5s (animation lasts ~1s + 1.5s hold for readability)
   setTimeout(function() {
     preloader.classList.add('hidden');
     setTimeout(function() { preloader.remove(); }, 400);
   }, 2000);
+})();
+
+// ============================================================
+// Reverse transition: kaoyan → blog
+// ============================================================
+(function(){
+  document.addEventListener('click', function(e){
+    var link = e.target.closest('a[href*="/circle-blog/"]');
+    if (!link || link.href.indexOf('/kaoyan') !== -1 || e.ctrlKey || e.metaKey) return;
+    e.preventDefault();
+
+    var overlay = document.createElement('div');
+    overlay.id = 'kt-reverse';
+    overlay.innerHTML = '<h2 style="font-family:Chillax-Variable,Geist Variable,sans-serif;font-size:2rem;font-weight:520;color:var(--text);letter-spacing:2px;opacity:0;animation:krIn 0.4s ease forwards">← CiRCLE</h2>';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#fafafa;display:flex;align-items:center;justify-content:center;';
+
+    var anim = document.createElement('style');
+    anim.textContent = '@keyframes krIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:translateY(0)}}';
+    document.head.appendChild(anim);
+    document.body.appendChild(overlay);
+
+    overlay.offsetHeight;
+    setTimeout(function(){ window.location = link.href; }, 300);
+  });
 })();
 
 // ============================================================
