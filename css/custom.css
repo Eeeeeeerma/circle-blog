@@ -3,14 +3,16 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.55);
   pointer-events: none;
   z-index: 1;
 }
 
 /* Banner 标题 — 加文字阴影，在亮部和雪花区域也能看清 */
-.home-banner-container .description {
+.home-banner-container .description,
+.home-banner-container .description p {
   text-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.65),
-    0 0 20px rgba(0, 0, 0, 0.4);
+    0 2px 6px rgba(0, 0, 0, 0.8),
+    0 0 16px rgba(0, 0, 0, 0.6),
+    0 0 32px rgba(0, 0, 0, 0.4);
 }
