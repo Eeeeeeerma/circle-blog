@@ -571,16 +571,16 @@
 
     var overlay = document.createElement('div');
     overlay.id = 'kt-reverse';
-    overlay.innerHTML = '<h2 style="font-family:Chillax-Variable,Geist Variable,sans-serif;font-size:2rem;font-weight:520;color:var(--text);letter-spacing:2px;opacity:0;animation:krIn 0.4s ease forwards">← CiRCLE</h2>';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#fafafa;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML = '<h2 style="font-family:Chillax-Variable,Geist Variable,sans-serif;font-size:2rem;font-weight:520;color:#fff;letter-spacing:2px;text-shadow:0 2px 16px rgba(255,255,255,0.2);opacity:0;animation:krIn 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards">← CiRCLE</h2>';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1e2a38;display:flex;align-items:center;justify-content:center;';
 
     var anim = document.createElement('style');
-    anim.textContent = '@keyframes krIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:translateY(0)}}';
+    anim.textContent = '@keyframes krIn{0%{opacity:0;transform:translateY(12px);filter:blur(4px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}';
     document.head.appendChild(anim);
     document.body.appendChild(overlay);
 
     overlay.offsetHeight;
-    setTimeout(function(){ window.location = link.href; }, 300);
+    setTimeout(function(){ window.location = link.href; }, 350);
   });
 })();
 

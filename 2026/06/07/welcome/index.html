@@ -917,6 +917,8 @@ a.page-number, a.extend, .right-bottom-tools, footer.footer {
     var link = e.target.closest('a[href*="/kaoyan"]');
     if (!link || e.ctrlKey || e.metaKey) return;
     e.preventDefault();
+    e.stopImmediatePropagation(); // beat Swup to it
+  }, true); // capture phase — fire before Swup
 
     var overlay = document.createElement('div');
     overlay.id = 'kt-transition';
