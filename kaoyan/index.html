@@ -7,95 +7,89 @@
 <title>27考研 · 进度追踪</title>
 <style>
   :root {
-    --bg: #0f0f14;
-    --card-bg: #1a1a24;
-    --card-border: #2a2a3a;
-    --text: #e0e0e0;
-    --text-secondary: #8888a0;
-    --accent: #6c8cff;
-    --accent-glow: rgba(108, 140, 255, 0.3);
-    --success: #4ecb71;
-    --warning: #f0a040;
-    --danger: #e05050;
-    --radius: 12px;
+    --bg: #fafafa;
+    --card-bg: #fff;
+    --card-border: rgba(0,0,0,0.08);
+    --text: #323739;
+    --text-secondary: #5c6669;
+    --accent: #4A6A8A;
+    --accent-light: rgba(74,106,138,0.08);
+    --accent-glow: rgba(74,106,138,0.12);
+    --success: #3b8250;
+    --warning: #b08830;
+    --danger: #c04040;
+    --radius: 10px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    line-height: 1.6;
+    line-height: 1.8;
+    font-size: 16px;
   }
 
-  .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+  .container { max-width: 750px; margin: 0 auto; padding: 40px 20px; }
 
-  /* ── Header ── */
-  .header { text-align: center; margin-bottom: 32px; }
+  .header { text-align: center; margin-bottom: 36px; }
   .header .back-link {
     display: inline-block; color: var(--text-secondary); text-decoration: none;
     font-size: 14px; margin-bottom: 20px; transition: color 0.2s;
   }
-  .header .back-link:hover { color: var(--text); }
+  .header .back-link:hover { color: var(--accent); }
   .header h1 {
-    font-size: 2.4rem; font-weight: 700; letter-spacing: 2px;
-    background: linear-gradient(135deg, #6c8cff, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 8px;
+    font-size: 2rem; font-weight: 650; letter-spacing: 1px;
+    color: var(--text); margin-bottom: 6px;
   }
-  .header .subtitle { color: var(--text-secondary); font-size: 15px; }
+  .header .subtitle { color: var(--text-secondary); font-size: 14px; font-weight: 400; }
 
-  /* ── Stats Row ── */
   .stats-row {
-    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    margin-bottom: 24px;
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 28px;
   }
   .stat-card {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 14px 20px; text-align: center;
-    min-width: 90px; flex: 1; max-width: 150px;
+    border-radius: var(--radius); padding: 16px 18px; text-align: center;
+    min-width: 80px; flex: 1; max-width: 140px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .stat-card .stat-num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
-  .stat-card .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .stat-card .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+  .stat-card .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
 
-  /* ── Countdown ── */
   .countdown-row {
-    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
     margin-bottom: 32px;
   }
   .countdown-card {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 20px 20px; text-align: center;
-    min-width: 100px; flex: 1; max-width: 160px;
+    border-radius: var(--radius); padding: 18px 16px; text-align: center;
+    min-width: 90px; flex: 1; max-width: 140px;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    min-height: 100px;
+    min-height: 90px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .countdown-card .number {
-    font-size: 2.8rem; font-weight: 800; font-variant-numeric: tabular-nums;
-    background: linear-gradient(180deg, #fff, #a0a0c0);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
+    font-size: 2.4rem; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: var(--text); line-height: 1.2;
   }
-  .countdown-card .label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-  .countdown-card.exam-day { justify-content: center; }
+  .countdown-card .label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
   .countdown-card.exam-day .number {
-    font-size: 1.2rem; -webkit-text-fill-color: var(--accent);
-    line-height: 1.2; padding: 0.5rem 0;
+    font-size: 1.1rem; color: var(--accent); font-weight: 650;
+    line-height: 1.2; padding: 0.3rem 0;
   }
 
-  /* ── Progress Bar ── */
   .progress-section {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+    border-radius: var(--radius); padding: 22px; margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .progress-section .progress-header {
     display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
-  .progress-section .progress-header h3 { font-size: 16px; font-weight: 600; }
+  .progress-section .progress-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
   .progress-section .progress-header .percent {
     font-size: 14px; color: var(--accent); font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -104,80 +98,83 @@
     font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;
   }
   .progress-bar-outer {
-    height: 8px; background: #2a2a3a; border-radius: 4px; overflow: hidden;
-    margin-bottom: 12px;
+    height: 6px; background: #e8e8e8; border-radius: 3px; overflow: hidden;
+    margin-bottom: 10px;
   }
   .progress-bar-inner {
-    height: 100%; background: linear-gradient(90deg, #6c8cff, #a78bfa);
-    border-radius: 4px; transition: width 0.6s ease; width: 0%;
+    height: 100%; background: var(--accent);
+    border-radius: 3px; transition: width 0.6s ease; width: 0%;
   }
   .progress-dates {
     display: flex; justify-content: space-between;
     font-size: 12px; color: var(--text-secondary);
   }
 
-  /* ── Subject Cards ── */
   .subjects-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px; margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px; margin-bottom: 24px;
   }
   .subject-card {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 20px; cursor: pointer;
-    transition: border-color 0.2s, transform 0.2s;
+    border-radius: var(--radius); padding: 18px; cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .subject-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .subject-card .subject-icon { font-size: 28px; margin-bottom: 10px; }
-  .subject-card .subject-name { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+  .subject-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .subject-card .subject-icon { font-size: 24px; margin-bottom: 8px; }
+  .subject-card .subject-name { font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
   .subject-card .subject-bar-outer {
-    height: 4px; background: #2a2a3a; border-radius: 2px; overflow: hidden;
+    height: 3px; background: #e8e8e8; border-radius: 2px; overflow: hidden;
   }
   .subject-card .subject-bar-inner {
     height: 100%; border-radius: 2px; transition: width 0.4s ease;
   }
   .subject-card .subject-pct {
-    font-size: 12px; color: var(--text-secondary); margin-top: 6px; text-align: right;
+    font-size: 12px; color: var(--text-secondary); margin-top: 4px; text-align: right;
   }
 
-  /* ── Today's Log ── */
   .log-section {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+    border-radius: var(--radius); padding: 22px; margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .log-section h3 {
-    font-size: 16px; font-weight: 600; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px; color: var(--text);
   }
-  .log-section h3 .today-date { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
-  .log-form { display: flex; flex-direction: column; gap: 12px; }
-  .log-form .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .log-section h3 .today-date { color: var(--text-secondary); font-weight: 400; font-size: 13px; }
+  .log-form { display: flex; flex-direction: column; gap: 10px; }
+  .log-form .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
   .log-form input, .log-form textarea, .log-form select {
-    background: #12121a; border: 1px solid var(--card-border);
-    border-radius: 8px; color: var(--text); padding: 10px 14px;
+    background: #fafafa; border: 1px solid var(--card-border);
+    border-radius: 8px; color: var(--text); padding: 9px 12px;
     font-size: 14px; font-family: inherit; outline: none;
     transition: border-color 0.2s;
   }
   .log-form input:focus, .log-form textarea:focus, .log-form select:focus {
-    border-color: var(--accent);
+    border-color: var(--accent); background: #fff;
   }
   .log-form input.invalid, .log-form select.invalid { border-color: var(--danger); }
-  .log-form input { flex: 1; min-width: 160px; }
+  .log-form input { flex: 1; min-width: 140px; }
   .log-form textarea { width: 100%; min-height: 80px; resize: vertical; }
   .log-form .btn {
     background: var(--accent); color: #fff; border: none; border-radius: 8px;
-    padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s; align-self: flex-start;
+    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s; align-self: flex-start;
   }
-  .log-form .btn:hover { background: #5b7aee; box-shadow: 0 0 20px var(--accent-glow); }
+  .log-form .btn:hover { background: #3b5977; }
   .log-form .btn-secondary {
     background: transparent; border: 1px solid var(--card-border); color: var(--text);
   }
-  .log-form .btn-secondary:hover { background: #222; box-shadow: none; }
+  .log-form .btn-secondary:hover { background: var(--bg); }
   .log-form .btn-danger {
     background: transparent; border: 1px solid var(--danger);
-    color: var(--danger); font-size: 12px; padding: 4px 10px;
+    color: var(--danger); font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer;
   }
-  .log-form .btn-danger:hover { background: rgba(224, 80, 80, 0.1); box-shadow: none; }
+  .log-form .btn-danger:hover { background: rgba(192,64,64,0.06); }
   .log-form .btn-small {
     background: transparent; border: 1px solid var(--card-border);
     color: var(--text-secondary); font-size: 12px; padding: 4px 12px;
@@ -185,54 +182,50 @@
   }
   .log-form .btn-small:hover { border-color: var(--accent); color: var(--text); }
 
-  /* ── Log History ── */
-  .log-list { display: flex; flex-direction: column; gap: 12px; }
+  .log-list { display: flex; flex-direction: column; gap: 10px; }
   .log-entry {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 20px; transition: border-color 0.2s;
+    border-radius: var(--radius); padding: 18px; transition: border-color 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .log-entry:hover { border-color: #3a3a50; }
+  .log-entry:hover { border-color: #c0c8d0; }
   .log-entry .entry-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
-  .log-entry .entry-date { font-weight: 600; font-size: 15px; }
+  .log-entry .entry-date { font-weight: 600; font-size: 14px; }
   .log-entry .entry-date .weekday { color: var(--text-secondary); font-weight: 400; font-size: 13px; }
   .log-entry .subject-tag {
     font-size: 11px; padding: 2px 8px; border-radius: 4px;
-    background: rgba(108, 140, 255, 0.15); color: var(--accent); font-weight: 500;
+    background: var(--accent-light); color: var(--accent); font-weight: 500;
   }
   .log-entry .entry-notes { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
-  .log-entry .entry-empty { color: #555; font-style: italic; }
+  .log-entry .entry-empty { color: #aaa; font-style: italic; font-size: 13px; }
 
-  /* ── Empty State ── */
   .empty-state { text-align: center; padding: 48px 20px; color: var(--text-secondary); }
-  .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
-  .empty-state p { font-size: 15px; }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
 
-  /* ── Warning Banner ── */
   .warning-banner {
-    background: rgba(240, 160, 64, 0.08); border: 1px solid rgba(240, 160, 64, 0.25);
-    border-radius: var(--radius); padding: 12px 16px; margin-bottom: 24px;
+    background: rgba(176,136,48,0.06); border: 1px solid rgba(176,136,48,0.2);
+    border-radius: var(--radius); padding: 10px 14px; margin-bottom: 24px;
     font-size: 13px; color: var(--warning); display: flex; align-items: flex-start; gap: 8px;
   }
-  .warning-banner .warn-icon { font-size: 16px; flex-shrink: 0; }
+  .warning-banner .warn-icon { font-size: 15px; flex-shrink: 0; }
 
-  /* ── Footer ── */
   .page-footer {
     text-align: center; color: var(--text-secondary); font-size: 13px;
-    margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--card-border);
+    margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--card-border);
   }
   .page-footer a { color: var(--accent); text-decoration: none; }
 
-  /* Responsive */
   @media (max-width: 600px) {
-    .container { padding: 16px 12px; }
-    .header h1 { font-size: 1.8rem; }
-    .countdown-card { padding: 14px 16px; min-width: 70px; }
-    .countdown-card .number { font-size: 2rem; }
+    .container { padding: 20px 12px; }
+    .header h1 { font-size: 1.6rem; }
+    .countdown-card { padding: 14px 12px; min-width: 65px; }
+    .countdown-card .number { font-size: 1.8rem; }
     .subjects-grid { grid-template-columns: 1fr 1fr; }
-    .stats-row .stat-card { min-width: 70px; }
+    .stats-row .stat-card { min-width: 65px; padding: 12px 10px; }
   }
 </style>
 </head>
