@@ -4,21 +4,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>27考研 · 进度追踪</title>
+<title>27考研 · 进度追踪 · CiRCLE</title>
 <style>
+  /* ============================================================
+     Design Tokens — matching CiRCLE blog (Redefine theme)
+     ============================================================ */
   :root {
+    --primary: #4A6A8A;
+    --primary-light: #6B8DB5;
+    --primary-dark: #3b5977;
     --bg: #fafafa;
     --card-bg: #fff;
-    --card-border: rgba(0,0,0,0.08);
+    --card-border: rgba(0,0,0,0.07);
     --text: #323739;
     --text-secondary: #5c6669;
-    --accent: #4A6A8A;
-    --accent-light: rgba(74,106,138,0.08);
-    --accent-glow: rgba(74,106,138,0.12);
+    --text-muted: #8b9298;
+    --accent-light: rgba(74,106,138,0.07);
+    --accent-glow: rgba(74,106,138,0.14);
     --success: #3b8250;
     --warning: #b08830;
     --danger: #c04040;
-    --radius: 10px;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,257 +41,390 @@
     min-height: 100vh;
     line-height: 1.8;
     font-size: 16px;
+    -webkit-font-smoothing: antialiased;
   }
 
-  .container { max-width: 750px; margin: 0 auto; padding: 40px 20px; }
-
-  .header { text-align: center; margin-bottom: 36px; }
-  .header .back-link {
-    display: inline-block; color: var(--text-secondary); text-decoration: none;
-    font-size: 14px; margin-bottom: 20px; transition: color 0.2s;
+  /* ============================================================
+     Navbar — matches blog's glassmorphism navbar
+     ============================================================ */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    font-family: 'Chillax-Variable', 'Geist Variable', sans-serif;
+    background: linear-gradient(120deg, rgba(74,106,138,0.208) 0%, rgba(107,141,181,0.208) 100%);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-  .header .back-link:hover { color: var(--accent); }
-  .header h1 {
-    font-size: 2rem; font-weight: 650; letter-spacing: 1px;
-    color: var(--text); margin-bottom: 6px;
+  .navbar-inner {
+    max-width: 850px; margin: 0 auto; padding: 0 24px;
+    height: 52px; display: flex; align-items: center; justify-content: space-between;
   }
-  .header .subtitle { color: var(--text-secondary); font-size: 14px; font-weight: 400; }
+  .navbar-brand {
+    font-size: 1.4rem; font-weight: 520; color: var(--text);
+    text-decoration: none; letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .navbar-brand:hover { color: var(--primary); }
+  .navbar-links { display: flex; gap: 20px; align-items: center; }
+  .navbar-links a {
+    font-size: 0.95rem; font-weight: 500; color: var(--text-secondary);
+    text-decoration: none; transition: color 0.2s; font-family: 'Geist Variable', sans-serif;
+  }
+  .navbar-links a:hover { color: var(--primary); }
+  .navbar-links a.active { color: var(--primary); font-weight: 600; }
 
-  .stats-row {
+  /* ============================================================
+     Hero Section — gradient banner matching blog aesthetic
+     ============================================================ */
+  .hero {
+    margin-top: 52px;
+    background: linear-gradient(150deg, #3d5a78 0%, var(--primary) 35%, var(--primary-light) 100%);
+    padding: 48px 20px 44px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(255,255,255,0.04); pointer-events: none;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -40px; left: -40px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: rgba(255,255,255,0.03); pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero h1 {
+    font-family: 'Chillax-Variable', 'Geist Variable', sans-serif;
+    font-size: 2.6rem; font-weight: 600; color: #fff;
+    letter-spacing: 2px; margin-bottom: 6px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .hero .subtitle {
+    font-size: 15px; color: rgba(255,255,255,0.78);
+    font-weight: 400; margin-bottom: 28px;
+  }
+
+  /* Countdown inside hero */
+  .countdown-row {
     display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+  .countdown-card {
+    background: rgba(255,255,255,0.13); backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius); padding: 16px 14px; text-align: center;
+    min-width: 80px; flex: 0 1 110px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .countdown-card:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+  .countdown-card .number {
+    font-size: 2.2rem; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: #fff; line-height: 1.2;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  .countdown-card .label {
+    font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; font-weight: 500;
+  }
+  .countdown-card.exam-day {
+    background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.3);
+  }
+  .countdown-card.exam-day .number {
+    font-size: 1.05rem; font-weight: 650; letter-spacing: 0.5px;
+  }
+
+  /* ============================================================
+     Main Content Area
+     ============================================================ */
+  .container { max-width: 750px; margin: 0 auto; padding: 32px 20px 40px; }
+
+  .section-title {
+    font-size: 15px; font-weight: 600; color: var(--text);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+  }
+
+  /* Stats Row */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
     margin-bottom: 28px;
   }
   .stat-card {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 16px 18px; text-align: center;
-    min-width: 80px; flex: 1; max-width: 140px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-radius: var(--radius); padding: 18px 12px; text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s;
   }
-  .stat-card .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
-  .stat-card .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .stat-card .stat-icon { font-size: 18px; margin-bottom: 6px; }
+  .stat-card .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--primary); line-height: 1.3; }
+  .stat-card .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-  .countdown-row {
-    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    margin-bottom: 32px;
-  }
-  .countdown-card {
-    background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 18px 16px; text-align: center;
-    min-width: 90px; flex: 1; max-width: 140px;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    min-height: 90px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .countdown-card .number {
-    font-size: 2.4rem; font-weight: 700; font-variant-numeric: tabular-nums;
-    color: var(--text); line-height: 1.2;
-  }
-  .countdown-card .label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-  .countdown-card.exam-day .number {
-    font-size: 1.1rem; color: var(--accent); font-weight: 650;
-    line-height: 1.2; padding: 0.3rem 0;
-  }
-
+  /* Time Progress */
   .progress-section {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 22px; margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-radius: var(--radius); padding: 22px 24px; margin-bottom: 28px;
+    box-shadow: var(--shadow-sm);
   }
-  .progress-section .progress-header {
+  .progress-header {
     display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
-  .progress-section .progress-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
-  .progress-section .progress-header .percent {
-    font-size: 14px; color: var(--accent); font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .progress-section .progress-subtitle {
-    font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;
-  }
+  .progress-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+  .progress-header .percent { font-size: 14px; color: var(--primary); font-weight: 600; }
+  .progress-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
   .progress-bar-outer {
-    height: 6px; background: #e8e8e8; border-radius: 3px; overflow: hidden;
+    height: 8px; background: #edf0f3; border-radius: 4px; overflow: hidden;
     margin-bottom: 10px;
   }
   .progress-bar-inner {
-    height: 100%; background: var(--accent);
-    border-radius: 3px; transition: width 0.6s ease; width: 0%;
+    height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 4px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); width: 0%;
+    box-shadow: 0 0 8px rgba(74,106,138,0.25);
   }
   .progress-dates {
     display: flex; justify-content: space-between;
-    font-size: 12px; color: var(--text-secondary);
+    font-size: 12px; color: var(--text-muted);
   }
 
+  /* Subject Cards Grid */
   .subjects-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px; margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px; margin-bottom: 32px;
   }
   .subject-card {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 18px; cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-radius: var(--radius); padding: 20px 18px 16px; cursor: pointer;
+    transition: all 0.25s ease; position: relative; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .subject-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--subj-color, var(--primary));
+    border-radius: 3px 3px 0 0; transition: height 0.2s;
   }
   .subject-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 2px 8px var(--accent-glow);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg); transform: translateY(-2px);
   }
-  .subject-card .subject-icon { font-size: 24px; margin-bottom: 8px; }
-  .subject-card .subject-name { font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
-  .subject-card .subject-bar-outer {
-    height: 3px; background: #e8e8e8; border-radius: 2px; overflow: hidden;
-  }
-  .subject-card .subject-bar-inner {
-    height: 100%; border-radius: 2px; transition: width 0.4s ease;
-  }
+  .subject-card:hover::before { height: 4px; }
+  .subject-card .subject-icon { font-size: 22px; margin-bottom: 6px; }
+  .subject-card .subject-name { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+  .subject-card .subject-rounds { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .subject-card .round-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
+  .subject-card .round-name { width: 44px; flex-shrink: 0; }
+  .subject-card .round-bar-outer { flex: 1; height: 4px; background: #edf0f3; border-radius: 2px; overflow: hidden; }
+  .subject-card .round-bar-inner { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+  .subject-card .round-pct { width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
   .subject-card .subject-pct {
-    font-size: 12px; color: var(--text-secondary); margin-top: 4px; text-align: right;
+    font-size: 13px; font-weight: 600; color: var(--primary);
+    text-align: right; padding-top: 6px; border-top: 1px solid #f0f0f0;
   }
 
+  /* ============================================================
+     Study Log Section
+     ============================================================ */
   .log-section {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 22px; margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-radius: var(--radius); padding: 22px 24px; margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
   }
-  .log-section h3 {
-    font-size: 15px; font-weight: 600; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px; color: var(--text);
+  .log-section .section-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
   }
-  .log-section h3 .today-date { color: var(--text-secondary); font-weight: 400; font-size: 13px; }
+  .log-section .section-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+  .log-section .section-header .today-date { color: var(--text-muted); font-weight: 400; font-size: 13px; }
+
   .log-form { display: flex; flex-direction: column; gap: 10px; }
   .log-form .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
   .log-form input, .log-form textarea, .log-form select {
-    background: #fafafa; border: 1px solid var(--card-border);
-    border-radius: 8px; color: var(--text); padding: 9px 12px;
+    background: #f8f9fa; border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm); color: var(--text); padding: 10px 14px;
     font-size: 14px; font-family: inherit; outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
   }
   .log-form input:focus, .log-form textarea:focus, .log-form select:focus {
-    border-color: var(--accent); background: #fff;
+    border-color: var(--primary); background: #fff;
+    box-shadow: 0 0 0 3px rgba(74,106,138,0.08);
   }
   .log-form input.invalid, .log-form select.invalid { border-color: var(--danger); }
+  .log-form input.invalid:focus, .log-form select.invalid:focus {
+    box-shadow: 0 0 0 3px rgba(192,64,64,0.08);
+  }
   .log-form input { flex: 1; min-width: 140px; }
   .log-form textarea { width: 100%; min-height: 80px; resize: vertical; }
-  .log-form .btn {
-    background: var(--accent); color: #fff; border: none; border-radius: 8px;
-    padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-    transition: background 0.2s; align-self: flex-start;
+
+  /* Buttons */
+  .btn {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; font-family: inherit;
   }
-  .log-form .btn:hover { background: #3b5977; }
-  .log-form .btn-secondary {
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn:active { transform: translateY(0); }
+  .btn-secondary {
     background: transparent; border: 1px solid var(--card-border); color: var(--text);
   }
-  .log-form .btn-secondary:hover { background: var(--bg); }
-  .log-form .btn-danger {
-    background: transparent; border: 1px solid var(--danger);
-    color: var(--danger); font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer;
-  }
-  .log-form .btn-danger:hover { background: rgba(192,64,64,0.06); }
-  .log-form .btn-small {
+  .btn-secondary:hover { background: var(--bg); border-color: #c0c8d0; transform: translateY(-1px); }
+  .btn-small {
     background: transparent; border: 1px solid var(--card-border);
-    color: var(--text-secondary); font-size: 12px; padding: 4px 12px;
-    border-radius: 6px; cursor: pointer; transition: border-color 0.2s;
+    color: var(--text-secondary); font-size: 12px; padding: 5px 14px;
+    border-radius: var(--radius-sm); cursor: pointer;
+    transition: all 0.2s; font-family: inherit;
   }
-  .log-form .btn-small:hover { border-color: var(--accent); color: var(--text); }
+  .btn-small:hover { border-color: var(--primary); color: var(--primary); background: var(--accent-light); }
+  .btn-danger {
+    background: transparent; border: 1px solid var(--danger);
+    color: var(--danger); font-size: 12px; padding: 4px 10px;
+    border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-danger:hover { background: rgba(192,64,64,0.06); }
 
-  .log-list { display: flex; flex-direction: column; gap: 10px; }
+  /* Log Entries */
+  .log-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
   .log-entry {
     background: var(--card-bg); border: 1px solid var(--card-border);
-    border-radius: var(--radius); padding: 18px; transition: border-color 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-radius: var(--radius); padding: 18px 22px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
   }
-  .log-entry:hover { border-color: #c0c8d0; }
+  .log-entry:hover { border-color: #c0c8d0; box-shadow: var(--shadow); }
   .log-entry .entry-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .log-entry .entry-date { font-weight: 600; font-size: 14px; }
-  .log-entry .entry-date .weekday { color: var(--text-secondary); font-weight: 400; font-size: 13px; }
+  .log-entry .entry-date .weekday { color: var(--text-muted); font-weight: 400; font-size: 13px; }
   .log-entry .subject-tag {
-    font-size: 11px; padding: 2px 8px; border-radius: 4px;
-    background: var(--accent-light); color: var(--accent); font-weight: 500;
+    font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    background: var(--accent-light); color: var(--primary); font-weight: 500;
   }
   .log-entry .entry-notes { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
-  .log-entry .entry-empty { color: #aaa; font-style: italic; font-size: 13px; }
+  .log-entry .entry-empty { color: #bbb; font-style: italic; font-size: 13px; }
 
-  .empty-state { text-align: center; padding: 48px 20px; color: var(--text-secondary); }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
   .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
   .empty-state p { font-size: 14px; }
 
+  /* Warning Banner */
   .warning-banner {
-    background: rgba(176,136,48,0.06); border: 1px solid rgba(176,136,48,0.2);
-    border-radius: var(--radius); padding: 10px 14px; margin-bottom: 24px;
-    font-size: 13px; color: var(--warning); display: flex; align-items: flex-start; gap: 8px;
+    background: rgba(176,136,48,0.05); border: 1px solid rgba(176,136,48,0.18);
+    border-radius: var(--radius); padding: 12px 16px; margin-bottom: 32px;
+    font-size: 13px; color: var(--warning); display: flex; align-items: flex-start; gap: 10px;
+    line-height: 1.6;
   }
-  .warning-banner .warn-icon { font-size: 15px; flex-shrink: 0; }
+  .warning-banner .warn-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
+  /* ============================================================
+     Footer — matching blog style
+     ============================================================ */
   .page-footer {
-    text-align: center; color: var(--text-secondary); font-size: 13px;
-    margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--card-border);
+    text-align: center; color: var(--text-muted); font-size: 13px;
+    padding-top: 20px; padding-bottom: 8px;
+    border-top: 2px solid var(--card-border);
   }
-  .page-footer a { color: var(--accent); text-decoration: none; }
+  .page-footer a { color: var(--primary); text-decoration: none; font-weight: 500; }
+  .page-footer a:hover { text-decoration: underline; }
 
-  @media (max-width: 600px) {
-    .container { padding: 20px 12px; }
-    .header h1 { font-size: 1.6rem; }
-    .countdown-card { padding: 14px 12px; min-width: 65px; }
-    .countdown-card .number { font-size: 1.8rem; }
-    .subjects-grid { grid-template-columns: 1fr 1fr; }
-    .stats-row .stat-card { min-width: 65px; padding: 12px 10px; }
+  /* ============================================================
+     Responsive
+     ============================================================ */
+  @media (max-width: 640px) {
+    .hero { padding: 36px 16px 32px; }
+    .hero h1 { font-size: 2rem; letter-spacing: 1px; }
+    .hero .subtitle { font-size: 13px; margin-bottom: 20px; }
+    .countdown-card { padding: 12px 10px; min-width: 60px; flex: 0 1 70px; }
+    .countdown-card .number { font-size: 1.6rem; }
+    .countdown-card.exam-day .number { font-size: 0.9rem; }
+
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .subjects-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .subject-card { padding: 14px 12px 12px; }
+
+    .container { padding: 24px 12px 32px; }
+    .log-section, .progress-section { padding: 18px 16px; }
+    .log-entry { padding: 14px 16px; }
+
+    .navbar-inner { padding: 0 16px; }
+    .navbar-links { gap: 12px; }
+    .navbar-links a { font-size: 0.85rem; }
+  }
+
+  @media (max-width: 380px) {
+    .countdown-card { padding: 10px 6px; min-width: 50px; flex: 0 1 58px; }
+    .countdown-card .number { font-size: 1.3rem; }
+    .subjects-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
+<!-- Navbar — matching blog's glassmorphism style -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/circle-blog/" class="navbar-brand">CiRCLE</a>
+    <div class="navbar-links">
+      <a href="/circle-blog/">首页</a>
+      <a href="/circle-blog/archives">归档</a>
+      <a href="/circle-blog/kaoyan" class="active">27考研</a>
+    </div>
+  </div>
+</nav>
 
-  <!-- Header -->
-  <div class="header">
-    <a href="/circle-blog/" class="back-link">← CiRCLE</a>
+<!-- Hero — gradient banner with integrated countdown -->
+<section class="hero">
+  <div class="hero-content">
     <h1>27 考研</h1>
     <p class="subtitle">每一份努力都在缩短与梦想的距离</p>
+    <div class="countdown-row" id="countdown">
+      <div class="countdown-card">
+        <div class="number" id="cd-days">--</div>
+        <div class="label">天</div>
+      </div>
+      <div class="countdown-card">
+        <div class="number" id="cd-hours">--</div>
+        <div class="label">时</div>
+      </div>
+      <div class="countdown-card">
+        <div class="number" id="cd-mins">--</div>
+        <div class="label">分</div>
+      </div>
+      <div class="countdown-card">
+        <div class="number" id="cd-secs">--</div>
+        <div class="label">秒</div>
+      </div>
+      <div class="countdown-card exam-day">
+        <div class="number" id="exam-date-label"></div>
+        <div class="label">考试日</div>
+      </div>
+    </div>
   </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
 
   <!-- Study Stats -->
   <div class="stats-row">
     <div class="stat-card">
+      <div class="stat-icon">📊</div>
       <div class="stat-num" id="stat-days">0</div>
       <div class="stat-label">已学习天数</div>
     </div>
     <div class="stat-card">
+      <div class="stat-icon">🔥</div>
       <div class="stat-num" id="stat-streak">0</div>
-      <div class="stat-label">连续打卡 🔥</div>
+      <div class="stat-label">连续打卡</div>
     </div>
     <div class="stat-card">
+      <div class="stat-icon">⏱️</div>
       <div class="stat-num" id="stat-hours">0</div>
       <div class="stat-label">总学习小时</div>
     </div>
     <div class="stat-card">
+      <div class="stat-icon">📚</div>
       <div class="stat-num" id="stat-subject-pct">0%</div>
       <div class="stat-label">科目完成度</div>
-    </div>
-  </div>
-
-  <!-- Countdown -->
-  <div class="countdown-row" id="countdown">
-    <div class="countdown-card">
-      <div class="number" id="cd-days">--</div>
-      <div class="label">天</div>
-    </div>
-    <div class="countdown-card">
-      <div class="number" id="cd-hours">--</div>
-      <div class="label">时</div>
-    </div>
-    <div class="countdown-card">
-      <div class="number" id="cd-mins">--</div>
-      <div class="label">分</div>
-    </div>
-    <div class="countdown-card">
-      <div class="number" id="cd-secs">--</div>
-      <div class="label">秒</div>
-    </div>
-    <div class="countdown-card exam-day">
-      <div class="number" id="exam-date-label"></div>
-      <div class="label">考试日</div>
     </div>
   </div>
 
@@ -290,7 +434,7 @@
       <h3>⏳ 备考时间进度</h3>
       <span class="percent" id="overall-pct">0%</span>
     </div>
-    <div class="progress-subtitle">从今天到考试的时间流逝（不是学习进度，学习进度见下方科目卡片）</div>
+    <div class="progress-subtitle">从备考开始到考试日的时间流逝（倒计时基准，非学习进度）</div>
     <div class="progress-bar-outer">
       <div class="progress-bar-inner" id="overall-bar"></div>
     </div>
@@ -300,13 +444,16 @@
     </div>
   </div>
 
-  <!-- Subject Progress -->
-  <h3 style="font-size:16px;font-weight:600;margin-bottom:12px;">📚 科目进度（点击卡片更新）</h3>
+  <!-- Subject Cards -->
+  <h3 class="section-title">📚 科目进度（点击卡片更新）</h3>
   <div class="subjects-grid" id="subjects-grid"></div>
 
   <!-- Today's Log -->
   <div class="log-section">
-    <h3>✍️ 今日记录 <span class="today-date" id="today-label"></span></h3>
+    <div class="section-header">
+      <h3>✍️ 今日记录</h3>
+      <span class="today-date" id="today-label"></span>
+    </div>
     <div class="log-form" id="log-form">
       <div class="form-row">
         <select id="log-subject">
@@ -324,7 +471,7 @@
 
   <!-- History -->
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <h3 style="font-size:16px;font-weight:600;">📖 学习日志</h3>
+    <h3 class="section-title" style="margin-bottom:0;">📖 学习日志</h3>
     <div style="display:flex;gap:6px;">
       <button class="btn btn-small" onclick="exportData()">📤 导出</button>
       <button class="btn btn-small" onclick="importData()">📥 导入</button>
@@ -337,16 +484,17 @@
     </div>
   </div>
 
-  <!-- Data Safety Warning -->
+  <!-- Data Safety -->
   <div class="warning-banner">
     <span class="warn-icon">⚠️</span>
-    <span>所有数据保存在浏览器本地存储（localStorage）中。<strong>清除浏览器缓存/数据会导致记录丢失。</strong>建议定期使用「导出」按钮备份数据到文件。</span>
+    <span>所有数据保存在浏览器本地存储中。<strong>清除浏览器缓存会导致记录丢失。</strong>建议定期用「导出」按钮备份到文件。</span>
   </div>
 
   <!-- Footer -->
-  <div class="page-footer">
-    <a href="/circle-blog/">← 返回博客</a> &nbsp;·&nbsp; 加油考研人 💪
-  </div>
+  <footer class="page-footer">
+    <p><a href="/circle-blog/">← 返回博客</a> &nbsp;·&nbsp; 加油考研人 💪</p>
+    <p style="margin-top:4px;">&copy; 2026 Lock &nbsp;·&nbsp; Powered by <a class="link"   href="https://hexo.io" >Hexo<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> &amp; Redefine</p>
+  </footer>
 
 </div>
 
@@ -532,23 +680,23 @@ function renderSubjects() {
     const rds = s.rounds || [];
     const wpct = subjectWeightedPct(s);
     return `
-      <div class="subject-card" onclick="editSubject('${s.id}')">
+      <div class="subject-card" onclick="editSubject('${s.id}')" style="--subj-color:${s.color}">
         <div class="subject-icon">${s.icon}</div>
         <div class="subject-name">${s.name}</div>
-        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+        <div class="subject-rounds">
           ${rds.map((r,i) => {
             const rpct = s.units > 0 ? Math.round(Math.min(r.done,s.units)/s.units*100) : 0;
             const alpha = [1, 0.7, 0.5][i];
-            return `<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);">
-              <span style="width:42px;flex-shrink:0;opacity:${alpha}">${r.name}</span>
-              <div style="flex:1;height:3px;background:#2a2a3a;border-radius:1px;overflow:hidden;">
-                <div style="height:100%;width:${rpct}%;background:${s.color};opacity:${alpha};border-radius:1px;"></div>
+            return `<div class="round-row" style="opacity:${alpha}">
+              <span class="round-name">${r.name}</span>
+              <div class="round-bar-outer">
+                <div class="round-bar-inner" style="width:${rpct}%;background:${s.color};"></div>
               </div>
-              <span style="width:26px;text-align:right;opacity:${alpha}">${rpct}%</span>
+              <span class="round-pct">${rpct}%</span>
             </div>`;
           }).join('')}
         </div>
-        <div class="subject-pct" style="font-weight:600;">综合 ${wpct}%</div>
+        <div class="subject-pct">综合 ${wpct}%</div>
       </div>
     `;
   }).join('');
