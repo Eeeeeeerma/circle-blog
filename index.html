@@ -152,6 +152,35 @@
                     <link rel="prefetch" href="/circle-blog/kaoyan/">
                 
     
+            
+                
+                    <script data-swup-reload-script>
+(function(){
+  // Transition: blog → kaoyan (head injection runs before Swup)
+  document.addEventListener('click', function(e){
+    var link = e.target.closest('a[href*="/kaoyan"]');
+    if (!link || e.ctrlKey || e.metaKey) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var overlay = document.createElement('div');
+    overlay.id = 'kt-transition';
+    overlay.innerHTML = '<h2 style="font-family:Chillax-Variable,Geist Variable,sans-serif;font-size:3rem;font-weight:600;color:#fff;letter-spacing:4px;text-shadow:0 2px 24px rgba(255,255,255,0.3);opacity:0;animation:ktIn 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards">27 考研</h2>';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1e2a38;display:flex;align-items:center;justify-content:center;';
+
+    var anim = document.createElement('style');
+    anim.textContent = '@keyframes ktIn{0%{opacity:0;transform:translateY(16px);filter:blur(6px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}';
+    document.head.appendChild(anim);
+    document.body.appendChild(overlay);
+
+    overlay.offsetHeight;
+    setTimeout(function(){ window.location = link.href; }, 400);
+  }, true);
+})();
+</script>
+
+                
+    
 
     
 <link rel="stylesheet" href="/circle-blog/css/style.css">
@@ -980,39 +1009,6 @@ a.page-number, a.extend, .right-bottom-tools, footer.footer {
   background-color: var(--background-color) !important;
 }
 </style>
-
-                    
-        
-                
-
-                    
-                        <script data-swup-reload-script>
-(function(){
-  // Smooth transition: blog homepage → kaoyan page
-  // Shows a dark overlay matching the kaoyan preloader, then navigates
-  document.addEventListener('click', function(e){
-    var link = e.target.closest('a[href*="/kaoyan"]');
-    if (!link || e.ctrlKey || e.metaKey) return;
-    e.preventDefault();
-    e.stopImmediatePropagation(); // beat Swup to it
-  }, true); // capture phase — fire before Swup
-
-    var overlay = document.createElement('div');
-    overlay.id = 'kt-transition';
-    overlay.innerHTML = '<h2 style="font-family:Chillax-Variable,Geist Variable,sans-serif;font-size:3rem;font-weight:600;color:#fff;letter-spacing:4px;text-shadow:0 2px 24px rgba(255,255,255,0.3);opacity:0;animation:ktIn 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards">27 考研</h2>';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1e2a38;display:flex;align-items:center;justify-content:center;';
-
-    var anim = document.createElement('style');
-    anim.textContent = '@keyframes ktIn{0%{opacity:0;transform:translateY(16px);filter:blur(6px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}';
-    document.head.appendChild(anim);
-    document.body.appendChild(overlay);
-
-    // Force repaint, then navigate after the text appears
-    overlay.offsetHeight;
-    setTimeout(function(){ window.location = link.href; }, 400);
-  });
-})();
-</script>
 
                     
         
