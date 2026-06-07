@@ -45,6 +45,43 @@
   }
 
   /* ============================================================
+     Preloader — entrance animation
+     ============================================================ */
+  .preloader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #1e2a38;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  .preloader.hidden {
+    opacity: 0; visibility: hidden; pointer-events: none;
+  }
+  .preloader-title {
+    font-family: 'Chillax-Variable', 'Geist Variable', sans-serif;
+    font-size: 3rem; font-weight: 600; color: #fff;
+    letter-spacing: 4px; text-align: center;
+    opacity: 0; transform: translateY(16px);
+    animation: preloaderIn 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    animation-delay: 0.15s;
+    text-shadow: 0 2px 24px rgba(255,255,255,0.3);
+  }
+  @keyframes preloaderIn {
+    0%   { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+    100% { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+  }
+
+  /* Hero entrance — content fades in after preloader hides */
+  .page-content { opacity: 0; animation: pageReveal 0.7s ease forwards; animation-delay: 0.3s; }
+  @keyframes pageReveal {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .preloader-title { font-size: 2.2rem; letter-spacing: 2px; }
+  }
+
+  /* ============================================================
      Navbar — matches blog's glassmorphism navbar
      ============================================================ */
   .navbar {
@@ -359,6 +396,14 @@
 </head>
 <body>
 
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+  <h2 class="preloader-title">27 考研</h2>
+</div>
+
+<!-- Page wrapper for entrance animation -->
+<div class="page-content">
+
 <!-- Navbar — matching blog's glassmorphism style -->
 <nav class="navbar">
   <div class="navbar-inner">
@@ -496,9 +541,22 @@
     <p style="margin-top:4px;">&copy; 2026 Lock &nbsp;·&nbsp; Powered by <a class="link"   href="https://hexo.io" >Hexo<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> &amp; Redefine</p>
   </footer>
 
-</div>
+</div><!-- /page-content -->
 
 <script>
+// ============================================================
+// Preloader
+// ============================================================
+(function() {
+  var preloader = document.getElementById('preloader');
+  // Hide after 2.5s (animation lasts ~1s + 1.5s hold for readability)
+  setTimeout(function() {
+    preloader.classList.add('hidden');
+    // Remove from DOM after transition
+    setTimeout(function() { preloader.remove(); }, 500);
+  }, 2500);
+})();
+
 // ============================================================
 // Config
 // ============================================================
