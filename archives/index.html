@@ -156,26 +156,25 @@
                 
                     <script data-swup-reload-script>
 (function(){
-  // Transition: blog → kaoyan (head injection runs before Swup)
-  document.addEventListener('click', function(e){
-    var link = e.target.closest('a[href*="/kaoyan"]');
-    if (!link || e.ctrlKey || e.metaKey) return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
+  // Hook into Swup's own link:click event — fires before Swup navigates.
+  // Calling preventDefault() stops Swup, then we handle the transition.
+  document.addEventListener('swup:link:click', function(e){
+    var detail = e.detail || {};
+    var url = (detail.visit && detail.visit.to && detail.visit.to.url) || '';
+    if (url.indexOf('/kaoyan') === -1) return;
+    e.preventDefault(); // stop Swup
 
     var overlay = document.createElement('div');
     overlay.id = 'kt-transition';
     overlay.innerHTML = '<h2 style="font-family:Chillax-Variable,Geist Variable,sans-serif;font-size:3rem;font-weight:600;color:#fff;letter-spacing:4px;text-shadow:0 2px 24px rgba(255,255,255,0.3);opacity:0;animation:ktIn 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards">27 考研</h2>';
     overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1e2a38;display:flex;align-items:center;justify-content:center;';
-
     var anim = document.createElement('style');
     anim.textContent = '@keyframes ktIn{0%{opacity:0;transform:translateY(16px);filter:blur(6px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}';
     document.head.appendChild(anim);
     document.body.appendChild(overlay);
-
     overlay.offsetHeight;
-    setTimeout(function(){ window.location = link.href; }, 400);
-  }, true);
+    setTimeout(function(){ window.location = detail.link ? detail.link.href : url; }, 400);
+  });
 })();
 </script>
 
