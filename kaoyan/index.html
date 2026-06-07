@@ -44,20 +44,15 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Fixed background layer — stays put while content scrolls over */
+  /* Fixed background layer — image + dark overlay, matches homepage banner */
   .bg-layer {
     position: fixed; inset: 0; z-index: 0;
-    background: linear-gradient(150deg, #3d5a78 0%, var(--primary) 35%, var(--primary-light) 100%);
-  }
-  .bg-layer::before {
-    content: ''; position: absolute; top: -60px; right: -60px;
-    width: 200px; height: 200px; border-radius: 50%;
-    background: rgba(255,255,255,0.04); pointer-events: none;
+    background: url('/circle-blog/images/kaoyan-bg.jpg') center/cover no-repeat;
   }
   .bg-layer::after {
-    content: ''; position: absolute; bottom: -40px; left: -40px;
-    width: 160px; height: 160px; border-radius: 50%;
-    background: rgba(255,255,255,0.03); pointer-events: none;
+    content: ''; position: absolute; inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none; z-index: 1;
   }
 
   /* All scrolling content sits above the fixed background */
