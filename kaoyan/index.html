@@ -447,7 +447,10 @@
   </div>
 </nav>
 
-<!-- No preloader — blog-side transition handles the dark fade -->
+<!-- Preloader — shows when page loads, bridges blog-side dark transition -->
+<div class="preloader" id="preloader">
+  <h2 class="preloader-title">27 考研</h2>
+</div>
 
 <!-- Page wrapper for entrance animation -->
 <div class="page-content">
@@ -602,6 +605,17 @@
 
     setTimeout(function(){ window.location = link.href; }, 500);
   });
+})();
+
+// ============================================================
+// Preloader — bridges the dark transition from blog
+// ============================================================
+(function() {
+  var preloader = document.getElementById('preloader');
+  setTimeout(function() {
+    preloader.classList.add('hidden');
+    setTimeout(function() { preloader.remove(); }, 400);
+  }, 2800);
 })();
 
 // ============================================================
