@@ -48,6 +48,11 @@
   .bg-layer {
     position: fixed; inset: 0; z-index: 0;
     background: url('/circle-blog/images/kaoyan-bg.jpg') center/cover no-repeat;
+    filter: blur(0px); -webkit-filter: blur(0px);
+    transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .bg-layer.blurred {
+    filter: blur(15px); -webkit-filter: blur(15px);
   }
   .bg-layer::after {
     content: ''; position: absolute; inset: 0;
@@ -196,7 +201,6 @@
   /* Frosted glass shared style for content cards */
   .glass {
     background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.5);
   }
 
@@ -212,7 +216,7 @@
     margin-bottom: 28px;
   }
   .stat-card {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.8);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: var(--radius); padding: 18px 12px; text-align: center;
     box-shadow: var(--shadow-sm);
@@ -225,7 +229,7 @@
 
   /* Time Progress */
   .progress-section {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.8);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: var(--radius); padding: 22px 24px; margin-bottom: 28px;
     box-shadow: var(--shadow-sm);
@@ -257,7 +261,7 @@
     gap: 12px; margin-bottom: 32px;
   }
   .subject-card {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.8);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: var(--radius); padding: 20px 18px 16px; cursor: pointer;
     transition: all 0.25s ease; position: relative; overflow: hidden;
@@ -290,7 +294,7 @@
      Study Log Section
      ============================================================ */
   .log-section {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.8);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: var(--radius); padding: 22px 24px; margin-bottom: 24px;
     box-shadow: var(--shadow-sm);
@@ -304,8 +308,7 @@
   .log-form { display: flex; flex-direction: column; gap: 10px; }
   .log-form .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
   .log-form input, .log-form textarea, .log-form select {
-    background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.75);     border: 1px solid rgba(255,255,255,0.4);
     border-radius: var(--radius-sm); color: var(--text); padding: 10px 14px;
     font-size: 14px; font-family: inherit; outline: none;
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
@@ -351,7 +354,7 @@
   /* Log Entries */
   .log-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
   .log-entry {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.8);
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: var(--radius); padding: 18px 22px;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -377,7 +380,7 @@
 
   /* Warning Banner */
   .warning-banner {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.8);
     border: 1px solid rgba(176,136,48,0.2);
     border-radius: var(--radius); padding: 12px 16px; margin-bottom: 32px;
     font-size: 13px; color: var(--warning); display: flex; align-items: flex-start; gap: 10px;
@@ -598,6 +601,30 @@
     });
 
     setTimeout(function(){ window.location = link.href; }, 500);
+  });
+})();
+
+// ============================================================
+// Background blur on scroll — like homepage banner
+// ============================================================
+(function() {
+  var bg = document.querySelector('.bg-layer');
+  var trigger = window.innerHeight * 0.7; // blur kicks in after 70% of hero scrolled
+  var ticking = false;
+
+  function update() {
+    var blurred = (window.scrollY || window.pageYOffset) >= trigger;
+    if (blurred) bg.classList.add('blurred');
+    else bg.classList.remove('blurred');
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, {passive: true});
+  window.addEventListener('resize', function() {
+    trigger = window.innerHeight * 0.7;
+    update();
   });
 })();
 
