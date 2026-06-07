@@ -431,12 +431,7 @@
 <!-- Fixed background layer — stays put while content scrolls over it -->
 <div class="bg-layer"></div>
 
-<!-- No preloader — blog-side transition handles the dark fade -->
-
-<!-- Page wrapper for entrance animation -->
-<div class="page-content">
-
-<!-- Navbar — matching blog's glassmorphism style -->
+<!-- Navbar — fixed, must be outside page-content to stay viewport-relative -->
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/circle-blog/" class="navbar-brand">CiRCLE</a>
@@ -447,6 +442,11 @@
     </div>
   </div>
 </nav>
+
+<!-- No preloader — blog-side transition handles the dark fade -->
+
+<!-- Page wrapper for entrance animation -->
+<div class="page-content">
 
 <!-- Hero — gradient banner with integrated countdown -->
 <section class="hero">
