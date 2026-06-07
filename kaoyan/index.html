@@ -81,8 +81,8 @@
     letter-spacing: 4px; text-align: center;
     opacity: 0;
     animation:
-      preloaderIn  0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards 0.1s,
-      preloaderOut 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards 1.2s;
+      preloaderIn  0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards 0.05s,
+      preloaderOut 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards 1.4s;
     text-shadow: 0 2px 24px rgba(255,255,255,0.3);
   }
   @keyframes preloaderIn {
@@ -615,7 +615,7 @@
   setTimeout(function() {
     preloader.classList.add('hidden');
     setTimeout(function() { preloader.remove(); }, 400);
-  }, 2800);
+  }, 2000);
 })();
 
 // ============================================================

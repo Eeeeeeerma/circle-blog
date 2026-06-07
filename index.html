@@ -152,33 +152,6 @@
                     <link rel="prefetch" href="/circle-blog/kaoyan/">
                 
     
-            
-                
-                    <script data-swup-reload-script>
-(function(){
-  // Hook into Swup's own link:click event — fires before Swup navigates.
-  // Calling preventDefault() stops Swup, then we handle the transition.
-  document.addEventListener('swup:link:click', function(e){
-    var detail = e.detail || {};
-    var url = (detail.visit && detail.visit.to && detail.visit.to.url) || '';
-    if (url.indexOf('/kaoyan') === -1) return;
-    e.preventDefault(); // stop Swup
-
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1e2a38;opacity:0;transition:opacity 0.6s ease;';
-    document.body.appendChild(overlay);
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        overlay.style.opacity = '1';
-      });
-    });
-    setTimeout(function(){ window.location = detail.link ? detail.link.href : url; }, 900);
-  });
-})();
-</script>
-
-                
-    
 
     
 <link rel="stylesheet" href="/circle-blog/css/style.css">
