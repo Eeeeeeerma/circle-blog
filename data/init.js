@@ -21,37 +21,29 @@
       if (!w || !c) { if (tries++ < 60) setTimeout(fixDom, 200); return; }
 
       w.style.zIndex = '90';
-      // DON'T set pointer-events: auto — let the widget manage it
 
-      // Drag via canvas (not the div — canvas has pointer-events: auto by widget)
+      // Drag — set a flag so widget's mouseup skips tap when dragging
       var drag = false, moved = false, dsx, dsy, ol, ot;
-
+      window.__L2D_dragged = false;
       c.addEventListener('mousedown', function(e) {
         if (e.button !== 0) return;
-        drag = true; moved = false;
+        drag = true; moved = false; window.__L2D_dragged = false;
         dsx = e.clientX; dsy = e.clientY;
         var r = w.getBoundingClientRect();
         ol = r.left; ot = r.top;
       });
-
       document.addEventListener('mousemove', function(e) {
         if (!drag) return;
         var dx = e.clientX - dsx, dy = e.clientY - dsy;
         if (!moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
-          moved = true;
+          moved = true; window.__L2D_dragged = true;
           w.style.right = 'auto'; w.style.bottom = 'auto';
           w.style.left = ol + 'px'; w.style.top = ot + 'px';
         }
         if (moved) { w.style.left = (ol + dx) + 'px'; w.style.top = (ot + dy) + 'px'; }
       });
+      document.addEventListener('mouseup', function() { drag = false; });
 
-      document.addEventListener('mouseup', function() {
-        if (drag && !moved) {
-          // Short click — let widget handle it naturally (tap motion)
-          // No need to dispatch — widget's own handler picks it up
-        }
-        drag = false;
-      });
     }
     setTimeout(fixDom, 800);
   }
