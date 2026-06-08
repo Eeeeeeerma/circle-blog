@@ -16,7 +16,7 @@
     L2Dwidget.init({
       model: { jsonPath: chosen, scale: 0.85 },
       display: { superSample: 2, width: 200, height: 350, position: 'right', hOffset: 20, vOffset: 0 },
-      mobile: { show: false },
+      mobile: { show: true },
       name: { canvas: 'l2dc', div: 'l2dw' },
       react: { opacity: 1 },
       dialog: { enable: false }
