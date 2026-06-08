@@ -5,8 +5,15 @@
   function ready() {
     if (typeof L2Dwidget === 'undefined') { setTimeout(ready, 100); return; }
 
+    // Random pick: Tae or Tsukushi
+    var models = [
+      '/circle-blog/data/tae/model.json',
+      '/circle-blog/data/tsukushi/model.json'
+    ];
+    var chosen = models[Math.floor(Math.random() * models.length)];
+
     L2Dwidget.init({
-      model: { jsonPath: '/circle-blog/data/model.json', scale: 0.85 },
+      model: { jsonPath: chosen, scale: 0.85 },
       display: { superSample: 2, width: 200, height: 350, position: 'right', hOffset: 20, vOffset: 0 },
       mobile: { show: false },
       name: { canvas: 'l2dc', div: 'l2dw' },
