@@ -5,10 +5,11 @@
   function ready() {
     if (typeof L2Dwidget === 'undefined') { setTimeout(ready, 100); return; }
 
-    // Random pick: Tae or Tsukushi
+    // Random pick: Tae, Tsukushi, or Saaya
     var models = [
       '/circle-blog/data/tae/model.json',
-      '/circle-blog/data/tsukushi/model.json'
+      '/circle-blog/data/tsukushi/model.json',
+      '/circle-blog/data/saaya/model.json'
     ];
     var chosen = models[Math.floor(Math.random() * models.length)];
 
