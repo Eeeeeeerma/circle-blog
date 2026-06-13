@@ -1,6 +1,11 @@
 (function(){
-  var p = window.location.pathname.replace(/\/+$/, '');
-  if (p !== '' && p !== '/circle-blog' && p !== '/circle-blog/index.html') return;
+  function isHomepage() {
+    var p = window.location.pathname.replace(/\/+$/, '');
+    return p === '' || p === '/circle-blog' || p === '/circle-blog/index.html';
+  }
+
+  // Only create snow on homepage
+  if (!isHomepage()) return;
 
   var canvas = document.createElement('canvas');
   canvas.id = 'snow-canvas';
@@ -61,4 +66,26 @@
   }
 
   draw();
+
+  // Handle SPA navigation: hide snow when leaving homepage, show when returning.
+  // Hook history.pushState / replaceState since Swup uses them for page transitions.
+  function updateCanvas() {
+    canvas.style.display = isHomepage() ? '' : 'none';
+  }
+
+  var _push = history.pushState;
+  history.pushState = function () {
+    _push.apply(this, arguments);
+    updateCanvas();
+  };
+  var _replace = history.replaceState;
+  history.replaceState = function () {
+    _replace.apply(this, arguments);
+    updateCanvas();
+  };
+  window.addEventListener('popstate', updateCanvas);
+
+  // Also catch Swup events (v3/v4)
+  document.addEventListener('swup:contentReplaced', updateCanvas);
+  document.addEventListener('swup:pageView', updateCanvas);
 })();
